@@ -15,19 +15,13 @@ public class PlayerHp : MonoBehaviour
         _animator = GetComponent<Animator>();
         _renderer = GetComponent<SpriteRenderer>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
+    void Start() {}
     void Update()
     {
         if (hp <= 0)
         {
             _animator.SetTrigger("Death");
-            Destroy(this.gameObject, 0.6f);
+            Destroy(this.gameObject, 1.25f);
         }
     }
 
@@ -39,7 +33,6 @@ public class PlayerHp : MonoBehaviour
             hp--;
         }
     }
-
     private IEnumerator VisualFeedback()
     {
         _renderer.color = Color.red;

@@ -12,7 +12,6 @@ public class EnemyHP : MonoBehaviour
     public int hp = 3;
     private void Awake()
     {
-        _collider = GetComponentInChildren<CapsuleCollider2D>(true);
         _animator = GetComponent<Animator>();
     }
     // Start is called before the first frame update
@@ -34,7 +33,7 @@ public class EnemyHP : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.name == "HitBox")
+        if(collision.gameObject.tag == "Spell")
         {
             _animator.SetTrigger("TakeHit");
             hp--;

@@ -1,94 +1,67 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 2.5f;
+    [SerializeField] private Rigidbody2D _rigidbody;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private GameObject[] _spellPrefab;
+    [SerializeField] private GameObject _character;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _cooldownSpell;
 
-    // References
-    private Rigidbody2D _rigidbody;
-    private Animator _animator;
+    private Vector2 _movementCharacter;
+    [SerializeField] private Vector3 _mousePosition;
+    private float _lastFireTime;
 
-    // Movement
-    private Vector2 _movement;
-    private bool _isFacingRight = true;
-
-    // Attack
-    private bool _isAttacking;
-
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
+    private void Awake(){}
+    void Start(){}
     void Update()
     {
-        if (_isAttacking == false)
-        {
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            float verticalInput = Input.GetAxisRaw("Vertical");
-            _movement = new Vector2(horizontalInput, verticalInput);
+        _movementCharacter = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        
+        _rigidbody.velocity = _movementCharacter.normalized * _speed;
 
-            // Flip character
-            if (horizontalInput < 0f && _isFacingRight == true)
-            {
-                Flip();
-            }
-            else if (horizontalInput > 0f && _isFacingRight == false)
-            {
-                Flip();
-            }
+        _animator.SetFloat("MovementX", _movementCharacter.x);
+        _animator.SetFloat("MovementY", _movementCharacter.y);
+        _animator.SetFloat("Speed", _movementCharacter.sqrMagnitude);
+
+        if (_movementCharacter != Vector2.zero)
+        {
+            _animator.SetFloat("PositionX", _movementCharacter.x);
+            _animator.SetFloat("PositionY", _movementCharacter.y);
         }
-
-        if (Input.GetButtonDown("Fire1") == true && _isAttacking == false)
+        
+        if (Input.GetMouseButton(0))
         {
-            _movement = Vector2.zero;
-            _rigidbody.velocity = Vector2.zero;
+            _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.transform.position;
+            Vector2 _mousePositionV2 = new Vector2(_mousePosition.x, _mousePosition.y);
+            
+            _rigidbody.velocity = _movementCharacter.normalized * _speed;
+
+            _animator.SetFloat("mousePositionX", _mousePositionV2.normalized.x);
+            _animator.SetFloat("mousePositionY", _mousePositionV2.normalized.y);
+            _animator.SetFloat("PositionX", _mousePositionV2.normalized.x);
+            _animator.SetFloat("PositionY", _mousePositionV2.normalized.y);
             _animator.SetTrigger("Attack");
-            _isAttacking = true;
+    
+      
+            SpellCast();
         }
+        if (!Input.GetMouseButton(0)) _animator.ResetTrigger("Attack");
     }
-
-    private void FixedUpdate()
+    public void SpellCast()
     {
-        if ( _isAttacking == false)
+        if (Time.time - _lastFireTime >= _cooldownSpell)
         {
-            float horizontalVelocity = _movement.normalized.x * speed;
-            float verticalVelocity = _movement.normalized.y * speed;
-            _rigidbody.velocity = new Vector2(horizontalVelocity, verticalVelocity);
+            Vector3 spellStartPosition = transform.position;
+
+            GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
+                     
+            _lastFireTime = Time.time;
         }
-    }
-
-    void LateUpdate()
-    {
-        _animator.SetBool("Idle", _movement == Vector2.zero);
-
-        // Animator
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-        {
-            _isAttacking = true;
-        }
-        else
-        {
-            _isAttacking = false;
-        }
-    }
-
-
-    private void Flip()
-    {
-        _isFacingRight = !_isFacingRight;
-        float localScaleX = transform.localScale.x;
-        localScaleX = localScaleX * -1f;
-        transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
 }

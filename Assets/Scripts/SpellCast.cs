@@ -9,9 +9,11 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float _fireballSpeed = 10f;
     [SerializeField] private float _lifeTime = 2f;
     [SerializeField] private float _cooldawnSpell = 2f;
+    [SerializeField] private float _forcePunch = 20;
     Rigidbody2D rb2d;
     float delayTime = 0.5f;
-    
+
+    Vector2 directionOne;
     void Start()
     {
         rb2d = gameObject.AddComponent<Rigidbody2D>();
@@ -41,12 +43,25 @@ public class FireballController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "EnemyHurt")
+        if(collision.tag == "Enemy")
         {
+           
+            Rigidbody2D enemyRb = collision.GetComponent<Rigidbody2D>();
+            if (enemyRb != null)
+            {
+                enemyRb.AddForce(rb2d.velocity/_fireballSpeed * _forcePunch, ForceMode2D.Impulse);
+                StartCoroutine(StopEnemy(enemyRb, 0.1f));
+            }
+            
             rb2d.velocity = Vector2.zero;
             _animator.SetTrigger("Destroy");
             Destroy(gameObject, 1f);
         }
+    }
+    private IEnumerator StopEnemy(Rigidbody2D enemyRb, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        enemyRb.velocity = Vector2.zero;
     }
 
     void Update(){  }

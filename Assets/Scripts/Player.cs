@@ -13,9 +13,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private GameObject _character;
     [SerializeField] private SpriteRenderer _renderer;
+    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private ManaBar manaBar;
 
     [Header("Character variables")]
     [SerializeField] private int _healthPoints = 100;
+    [SerializeField] private int _currentHp = 100;
+    [SerializeField] private int _maxMana = 100;
+    [SerializeField] private int _currentMana;
 
     [Header("Movement variables")]
     [SerializeField] private Vector2 _movementCharacter;
@@ -25,16 +30,13 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject[] _spellPrefab;
     [SerializeField] private float _cooldownSpell;
     [SerializeField] private float _lastFireTime;
-    public ActiveSkill[] skills;
-    public ManaBar manaBar;
-    public int maxMana = 100;
-    public int currentMana;
-
-    [SerializeField] private Vector3 _mousePosition;
+    [SerializeField] private ActiveSkill[] skills;
 
     [Header("Knockback")]
     [SerializeField] private bool _knockbacked;
     [SerializeField] private float _knockbackTime = 0.5f;
+
+    [SerializeField] private Vector3 _mousePosition;
 
 
     private void Awake() { }
@@ -42,8 +44,11 @@ public class Player : MonoBehaviour
     {
         skills[0].SetActiveSkill();
         InvokeRepeating("RestoreMana", 0, 1);
-        currentMana = maxMana;
-        manaBar.SetMaxMana(maxMana);
+        _currentMana = _maxMana;
+        manaBar.SetMaxMana(_maxMana);
+
+        _currentHp = _healthPoints;
+        healthBar.SetMaxHealth(_healthPoints);
     }
     void Update()
     {
@@ -109,23 +114,20 @@ public class Player : MonoBehaviour
             skills[2].ResetActiveSkill();
             skills[3].SetActiveSkill();
         }
-        if (_healthPoints <= 0)
+        if (_currentHp <= 0)
         {
             _animator.SetTrigger("Death");
             Destroy(this.gameObject, 1.25f);
         }
     }
 
-
-
-
     public void SpellCast(int manaCost)
     {
-        if (Time.time - _lastFireTime >= _cooldownSpell && currentMana > 0)
+        if (Time.time - _lastFireTime >= _cooldownSpell && _currentMana > 0)
         {
-            currentMana -= manaCost;
+            _currentMana -= manaCost;
 
-            manaBar.SetMana(currentMana);
+            manaBar.SetMana(_currentMana);
             Vector3 spellStartPosition = transform.position;
 
             GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour
         _knockbacked = true;
         _rigidbody.velocity = dir.normalized * _knockbackVelocity;
         StartCoroutine("VisualFeedback");
-        _healthPoints -= _knockbackDamage;
+        TakeDamage(_knockbackDamage);
         StartCoroutine(UnKnockback());
     }
     private IEnumerator UnKnockback()
@@ -157,10 +159,17 @@ public class Player : MonoBehaviour
 
     void RestoreMana()
     {
-        if (currentMana < maxMana)
+        if (_currentMana < _maxMana)
         {
-            currentMana = currentMana + 5;
-            manaBar.SetMana(currentMana);
+            _currentMana = _currentMana + 5;
+            manaBar.SetMana(_currentMana);
         }
+    }
+
+    void TakeDamage(int damage)
+    {
+        _currentHp -= damage;
+
+        healthBar.SetHealth(_currentHp);
     }
 }

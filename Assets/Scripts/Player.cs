@@ -61,77 +61,87 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-
-        if (!_knockbacked) { 
-            _movementCharacter = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        _rigidbody.velocity = _movementCharacter.normalized * _speed;
-
-        _animator.SetFloat("MovementX", _movementCharacter.x);
-        _animator.SetFloat("MovementY", _movementCharacter.y);
-        _animator.SetFloat("Speed", _movementCharacter.sqrMagnitude);
-
-        if (_movementCharacter != Vector2.zero)
+        if (!PauseMenu._gameIsPause && !GameOverMenu._gameEnds)
         {
-            _animator.SetFloat("PositionX", _movementCharacter.x);
-            _animator.SetFloat("PositionY", _movementCharacter.y);
-        }
+            if (!_knockbacked)
+            {
+                _movementCharacter = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+                _rigidbody.velocity = _movementCharacter.normalized * _speed;
+
+                _animator.SetFloat("MovementX", _movementCharacter.x);
+                _animator.SetFloat("MovementY", _movementCharacter.y);
+                _animator.SetFloat("Speed", _movementCharacter.sqrMagnitude);
+
+                if (_movementCharacter != Vector2.zero)
+                {
+                    _animator.SetFloat("PositionX", _movementCharacter.x);
+                    _animator.SetFloat("PositionY", _movementCharacter.y);
+                }
             }
-        if (Input.GetMouseButton(0))
-        {
-            _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.transform.position;
-            Vector2 _mousePositionV2 = new Vector2(_mousePosition.x, _mousePosition.y);
+            if (Input.GetMouseButton(0))
+            {
+                _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.transform.position;
+                Vector2 _mousePositionV2 = new Vector2(_mousePosition.x, _mousePosition.y);
 
-            _rigidbody.velocity = _movementCharacter.normalized * _speed;
+                _rigidbody.velocity = _movementCharacter.normalized * _speed;
 
-            _animator.SetFloat("mousePositionX", _mousePositionV2.normalized.x);
-            _animator.SetFloat("mousePositionY", _mousePositionV2.normalized.y);
-            _animator.SetFloat("PositionX", _mousePositionV2.normalized.x);
-            _animator.SetFloat("PositionY", _mousePositionV2.normalized.y);
-            _animator.SetTrigger("Attack");
+                _animator.SetFloat("mousePositionX", _mousePositionV2.normalized.x);
+                _animator.SetFloat("mousePositionY", _mousePositionV2.normalized.y);
+                _animator.SetFloat("PositionX", _mousePositionV2.normalized.x);
+                _animator.SetFloat("PositionY", _mousePositionV2.normalized.y);
+                _animator.SetTrigger("Attack");
 
 
-            SpellCast(10);
-        }
-        if (!Input.GetMouseButton(0)) _animator.ResetTrigger("Attack");
+                SpellCast(10);
+            }
+            if (!Input.GetMouseButton(0)) _animator.ResetTrigger("Attack");
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            _activeSkill = 1;
-            _skills[0].SetActiveSkill();
-            _skills[1].ResetActiveSkill();
-            _skills[2].ResetActiveSkill();
-            _skills[3].ResetActiveSkill(); 
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                _activeSkill = 1;
+                _skills[0].SetActiveSkill();
+                _skills[1].ResetActiveSkill();
+                _skills[2].ResetActiveSkill();
+                _skills[3].ResetActiveSkill();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                _activeSkill = 2;
+                _skills[0].ResetActiveSkill();
+                _skills[1].SetActiveSkill();
+                _skills[2].ResetActiveSkill();
+                _skills[3].ResetActiveSkill();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _activeSkill = 3;
+                _skills[0].ResetActiveSkill();
+                _skills[1].ResetActiveSkill();
+                _skills[2].SetActiveSkill();
+                _skills[3].ResetActiveSkill();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                _activeSkill = 4;
+                _skills[0].ResetActiveSkill();
+                _skills[1].ResetActiveSkill();
+                _skills[2].ResetActiveSkill();
+                _skills[3].SetActiveSkill();
+            }
+            if (_currentHp <= 0)
+            {
+                _animator.SetTrigger("Death");
+                Destroy(this.gameObject, 1.25f);
+                Invoke(nameof(EndGame),1f);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            _activeSkill = 2;
-            _skills[0].ResetActiveSkill();
-            _skills[1].SetActiveSkill();
-            _skills[2].ResetActiveSkill();
-            _skills[3].ResetActiveSkill();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            _activeSkill = 3;
-            _skills[0].ResetActiveSkill();
-            _skills[1].ResetActiveSkill();
-            _skills[2].SetActiveSkill();
-            _skills[3].ResetActiveSkill();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            _activeSkill = 4;
-            _skills[0].ResetActiveSkill();
-            _skills[1].ResetActiveSkill();
-            _skills[2].ResetActiveSkill();
-            _skills[3].SetActiveSkill();
-        }
-        if (_currentHp <= 0)
-        {
-            _animator.SetTrigger("Death");
-            Destroy(this.gameObject, 1.25f);
-        }
+        
+    }
+
+    void EndGame()
+    {
+        GameOverMenu._gameEnds = true;
     }
 
     public void SpellCast(int manaCost)

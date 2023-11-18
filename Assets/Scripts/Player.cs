@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -23,14 +25,26 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject[] _spellPrefab;
     [SerializeField] private float _cooldownSpell;
     [SerializeField] private float _lastFireTime;
+    public ActiveSkill[] skills;
+    public ManaBar manaBar;
+    public int maxMana = 100;
+    public int currentMana;
+
     [SerializeField] private Vector3 _mousePosition;
 
     [Header("Knockback")]
     [SerializeField] private bool _knockbacked;
     [SerializeField] private float _knockbackTime = 0.5f;
 
-    private void Awake(){}
-    void Start(){}
+
+    private void Awake() { }
+    void Start()
+    {
+        skills[0].SetActiveSkill();
+        InvokeRepeating("RestoreMana", 0, 1);
+        currentMana = maxMana;
+        manaBar.SetMaxMana(maxMana);
+    }
     void Update()
     {
 
@@ -53,7 +67,7 @@ public class Player : MonoBehaviour
         {
             _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.transform.position;
             Vector2 _mousePositionV2 = new Vector2(_mousePosition.x, _mousePosition.y);
-            
+
             _rigidbody.velocity = _movementCharacter.normalized * _speed;
 
             _animator.SetFloat("mousePositionX", _mousePositionV2.normalized.x);
@@ -61,26 +75,61 @@ public class Player : MonoBehaviour
             _animator.SetFloat("PositionX", _mousePositionV2.normalized.x);
             _animator.SetFloat("PositionY", _mousePositionV2.normalized.y);
             _animator.SetTrigger("Attack");
-    
-      
-            SpellCast();
+
+
+            SpellCast(10);
         }
         if (!Input.GetMouseButton(0)) _animator.ResetTrigger("Attack");
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            skills[0].SetActiveSkill();
+            skills[1].ResetActiveSkill();
+            skills[2].ResetActiveSkill();
+            skills[3].ResetActiveSkill(); 
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            skills[0].ResetActiveSkill();
+            skills[1].SetActiveSkill();
+            skills[2].ResetActiveSkill();
+            skills[3].ResetActiveSkill();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            skills[0].ResetActiveSkill();
+            skills[1].ResetActiveSkill();
+            skills[2].SetActiveSkill();
+            skills[3].ResetActiveSkill();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            skills[0].ResetActiveSkill();
+            skills[1].ResetActiveSkill();
+            skills[2].ResetActiveSkill();
+            skills[3].SetActiveSkill();
+        }
         if (_healthPoints <= 0)
         {
             _animator.SetTrigger("Death");
             Destroy(this.gameObject, 1.25f);
         }
     }
-    public void SpellCast()
+
+
+
+
+    public void SpellCast(int manaCost)
     {
-        if (Time.time - _lastFireTime >= _cooldownSpell)
+        if (Time.time - _lastFireTime >= _cooldownSpell && currentMana > 0)
         {
+            currentMana -= manaCost;
+
+            manaBar.SetMana(currentMana);
             Vector3 spellStartPosition = transform.position;
 
             GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
-                     
+
             _lastFireTime = Time.time;
         }
     }
@@ -104,5 +153,14 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         _renderer.color = Color.white;
+    }
+
+    void RestoreMana()
+    {
+        if (currentMana < maxMana)
+        {
+            currentMana = currentMana + 5;
+            manaBar.SetMana(currentMana);
+        }
     }
 }

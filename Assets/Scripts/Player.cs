@@ -28,9 +28,17 @@ public class Player : MonoBehaviour
 
     [Header("Spell variables")]
     [SerializeField] private GameObject[] _spellPrefab;
-    [SerializeField] private float _cooldownSpell;
-    [SerializeField] private float _lastFireTime;
-    [SerializeField] private ActiveSkill[] skills;
+    [SerializeField] private float _cooldownSpellFire;
+    [SerializeField] private float _cooldownSpellIce;
+    [SerializeField] private float _cooldownSpellThunder;
+    [SerializeField] private float _cooldownSpellHeal;
+    [SerializeField] private int _activeSkill;
+    [SerializeField] private float _lastFireTimeFire;
+    [SerializeField] private float _lastFireTimeIce;
+    [SerializeField] private float _lastFireTimeThunder;
+    [SerializeField] private float _lastFireTimeHeal;
+    [SerializeField] private ActiveSkill[] _skills;
+    [SerializeField] private CooldownCounter[] _cooldowns;
 
     [Header("Knockback")]
     [SerializeField] private bool _knockbacked;
@@ -42,7 +50,8 @@ public class Player : MonoBehaviour
     private void Awake() { }
     void Start()
     {
-        skills[0].SetActiveSkill();
+        _activeSkill = 1;
+        _skills[0].SetActiveSkill();
         InvokeRepeating("RestoreMana", 0, 1);
         _currentMana = _maxMana;
         manaBar.SetMaxMana(_maxMana);
@@ -88,31 +97,35 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            skills[0].SetActiveSkill();
-            skills[1].ResetActiveSkill();
-            skills[2].ResetActiveSkill();
-            skills[3].ResetActiveSkill(); 
+            _activeSkill = 1;
+            _skills[0].SetActiveSkill();
+            _skills[1].ResetActiveSkill();
+            _skills[2].ResetActiveSkill();
+            _skills[3].ResetActiveSkill(); 
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            skills[0].ResetActiveSkill();
-            skills[1].SetActiveSkill();
-            skills[2].ResetActiveSkill();
-            skills[3].ResetActiveSkill();
+            _activeSkill = 2;
+            _skills[0].ResetActiveSkill();
+            _skills[1].SetActiveSkill();
+            _skills[2].ResetActiveSkill();
+            _skills[3].ResetActiveSkill();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            skills[0].ResetActiveSkill();
-            skills[1].ResetActiveSkill();
-            skills[2].SetActiveSkill();
-            skills[3].ResetActiveSkill();
+            _activeSkill = 3;
+            _skills[0].ResetActiveSkill();
+            _skills[1].ResetActiveSkill();
+            _skills[2].SetActiveSkill();
+            _skills[3].ResetActiveSkill();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            skills[0].ResetActiveSkill();
-            skills[1].ResetActiveSkill();
-            skills[2].ResetActiveSkill();
-            skills[3].SetActiveSkill();
+            _activeSkill = 4;
+            _skills[0].ResetActiveSkill();
+            _skills[1].ResetActiveSkill();
+            _skills[2].ResetActiveSkill();
+            _skills[3].SetActiveSkill();
         }
         if (_currentHp <= 0)
         {
@@ -123,17 +136,71 @@ public class Player : MonoBehaviour
 
     public void SpellCast(int manaCost)
     {
-        if (Time.time - _lastFireTime >= _cooldownSpell && _currentMana > 0)
+        switch (_activeSkill)
         {
-            _currentMana -= manaCost;
+            case 1:
+                if (Time.time - _lastFireTimeFire >= _cooldownSpellFire && _currentMana > 0)
+                {
+                    _currentMana -= manaCost;
 
-            manaBar.SetMana(_currentMana);
-            Vector3 spellStartPosition = transform.position;
+                    manaBar.SetMana(_currentMana);
+                    Vector3 spellStartPosition = transform.position;
 
-            GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
+                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
 
-            _lastFireTime = Time.time;
+                    _lastFireTimeFire = Time.time;
+                    _cooldowns[0].SetCooldown(_cooldownSpellFire);
+                    _cooldowns[0].StartCounting();
+                }
+                break;
+            case 2:
+                if (Time.time - _lastFireTimeIce >= _cooldownSpellIce && _currentMana > 0)
+                {
+                    _currentMana -= manaCost;
+
+                    manaBar.SetMana(_currentMana);
+                    Vector3 spellStartPosition = transform.position;
+
+                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
+
+                    _lastFireTimeIce = Time.time;
+                    _cooldowns[1].SetCooldown(_cooldownSpellIce);
+                    _cooldowns[1].StartCounting();
+                }
+                break;
+            case 3:
+                if (Time.time - _lastFireTimeThunder >= _cooldownSpellThunder && _currentMana > 0)
+                {
+                    _currentMana -= manaCost;
+
+                    manaBar.SetMana(_currentMana);
+                    Vector3 spellStartPosition = transform.position;
+
+                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
+
+                    _lastFireTimeThunder = Time.time;
+                    _cooldowns[2].SetCooldown(_cooldownSpellThunder);
+                    _cooldowns[2].StartCounting();
+                }
+                break;
+            case 4:
+                if (Time.time - _lastFireTimeHeal >= _cooldownSpellHeal && _currentMana > 0)
+                {
+                    _currentMana -= manaCost;
+
+                    manaBar.SetMana(_currentMana);
+                    Vector3 spellStartPosition = transform.position;
+
+                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
+
+                    _lastFireTimeHeal = Time.time;
+                    _cooldowns[3].SetCooldown(_cooldownSpellHeal);
+                    _cooldowns[3].StartCounting();
+                }
+                break;
+
         }
+       
     }
     public void Knockback(Transform t, float _knockbackVelocity, int _knockbackDamage) { 
         var dir = transform.position - t.transform.position;

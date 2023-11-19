@@ -7,9 +7,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private Animator _animator;
     [SerializeField] private int _healthPoints = 100;
+    [SerializeField] private HealthBar _healthBar;
 
-    private void Awake(){}
-    void Start(){}
+    private void Awake()
+    {
+        _healthBar.SetMaxHealth(_healthPoints);
+    }
+    void Start()
+    {
+        
+    }
     void Update()
     {
         if (_healthPoints <= 0)
@@ -25,7 +32,7 @@ public class Enemy : MonoBehaviour
         if(_collider.gameObject.tag == "Spell")
         {
             _healthPoints--;
-
+            _healthBar.SetHealth(_healthPoints);
             if (_healthPoints > 0) _animator.SetTrigger("TakeHit");
         }
     }

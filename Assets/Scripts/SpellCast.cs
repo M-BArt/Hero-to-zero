@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class FireballController : MonoBehaviour
@@ -12,16 +13,16 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float _cooldawnSpell = 2f;
     [SerializeField] private float _forcePunch = 20;
     
+    
     private Rigidbody2D _fireballRigidbody;
+    private Collider2D _collider;
     private float delayTime = 0.5f;
     private bool _readyToCast;
 
     void Start()
     {
-        _fireballRigidbody = gameObject.AddComponent<Rigidbody2D>();
-        _fireballRigidbody.gravityScale = 0;
-        _fireballRigidbody.freezeRotation = true;
-
+        _fireballRigidbody = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<Collider2D>();   
         _readyToCast = false;
         StartCoroutine(StartMovementAfterDelay());
     }
@@ -41,23 +42,26 @@ public class FireballController : MonoBehaviour
         _fireballRigidbody.velocity = unitVector * _fireballSpeed;
         Destroy(gameObject, _lifeTime);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "wall")
         {
-           
-            Rigidbody2D enemyRb = collision.GetComponent<Rigidbody2D>();
+
+            Rigidbody2D enemyRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (enemyRb != null)
             {
-                enemyRb.AddForce(_fireballRigidbody.velocity/_fireballSpeed * _forcePunch, ForceMode2D.Impulse);
+                enemyRb.AddForce(_fireballRigidbody.velocity / _fireballSpeed * _forcePunch, ForceMode2D.Impulse);
                 StartCoroutine(StopEnemy(enemyRb, 0.1f));
             }
-            
+
             _fireballRigidbody.velocity = Vector2.zero;
+            _collider.enabled = false;
             _animator.SetTrigger("Destroy");
             Destroy(gameObject, 1f);
         }
     }
+
     private IEnumerator StopEnemy(Rigidbody2D enemyRb, float delay)
     {
         yield return new WaitForSeconds(delay);

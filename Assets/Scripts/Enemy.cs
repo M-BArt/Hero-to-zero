@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private Animator _animator;
     [SerializeField] private int _healthPoints = 100;
     [SerializeField] private HealthBar _healthBar;
@@ -26,10 +25,9 @@ public class Enemy : MonoBehaviour
         }
         
     }
-
-    private void OnTriggerEnter2D(Collider2D _collider)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(_collider.gameObject.tag == "Spell")
+        if (collision.gameObject.tag == "Spell")
         {
             _healthPoints--;
             _healthBar.SetHealth(_healthPoints);

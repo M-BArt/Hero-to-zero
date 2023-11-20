@@ -8,6 +8,7 @@ TagManager:
   - Spell
   - EnemyHurt
   - Enemy
+  - wall
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - SpellLayer
   - 
   - 
-  - 
+  - Walls
   - 
   - 
   - 

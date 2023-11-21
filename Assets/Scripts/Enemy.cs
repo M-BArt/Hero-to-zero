@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
         {
             _healthPoints--;
             _healthBar.SetHealth(_healthPoints);
+            FindObjectOfType<AudioManager>().Play("SlimeHit");
             if (_healthPoints > 0) _animator.SetTrigger("TakeHit");
         }
     }

@@ -21,6 +21,7 @@ public class FireballController : MonoBehaviour
 
     void Start()
     {
+        
         _SpellRigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();   
         _readyToCast = false;
@@ -58,6 +59,7 @@ public class FireballController : MonoBehaviour
             _SpellRigidbody.velocity = Vector2.zero;
             _collider.enabled = false;
             _animator.SetTrigger("Destroy");
+            FindObjectOfType<AudioManager>().Play("SpellDestory");
             Destroy(gameObject, 1f);
         }
     }

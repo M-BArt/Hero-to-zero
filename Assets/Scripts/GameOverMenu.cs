@@ -24,6 +24,8 @@ public class GameOverMenu : MonoBehaviour
         Time.timeScale = 1f;
         _gameEnds = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        FindObjectOfType<AudioManager>().Stop("GameOver");
+        FindObjectOfType<AudioManager>().Play("Theme");
     }
 
     void TheEnd()
@@ -37,6 +39,8 @@ public class GameOverMenu : MonoBehaviour
         _gameEnds = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        FindObjectOfType<AudioManager>().Stop("GameOver");
+        FindObjectOfType<AudioManager>().Play("Theme");
     }
 
     public void QuitGame()

@@ -41,6 +41,8 @@ public class PauseMenu : MonoBehaviour
         _gameIsPause = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        FindObjectOfType<AudioManager>().Stop("GameOver");
+        FindObjectOfType<AudioManager>().Play("Theme");
     }
 
     public void QuitGame()

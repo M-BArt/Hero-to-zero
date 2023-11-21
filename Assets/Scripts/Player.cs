@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private HealthBar healthBar;
     [SerializeField] private ManaBar manaBar;
+    [SerializeField] private BoxCollider2D _boxCollider;
 
     [Header("Character variables")]
     [SerializeField] private int _healthPoints = 100;
@@ -45,11 +46,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float _knockbackTime = 0.5f;
 
     [SerializeField] private Vector3 _mousePosition;
-
+    private bool _isDead = false;
 
     private void Awake() { }
     void Start()
     {
+        _boxCollider = GetComponent<BoxCollider2D>();
         _activeSkill = 1;
         _skills[0].SetActiveSkill();
         InvokeRepeating("RestoreMana", 0, 1);
@@ -61,7 +63,7 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        if (!PauseMenu._gameIsPause && !GameOverMenu._gameEnds)
+        if (!PauseMenu._gameIsPause && !GameOverMenu._gameEnds && !_isDead)
         {
             if (!_knockbacked)
             {
@@ -129,8 +131,12 @@ public class Player : MonoBehaviour
                 _skills[2].ResetActiveSkill();
                 _skills[3].SetActiveSkill();
             }
-            if (_currentHp <= 0)
+            if (_currentHp <= 0 && !_isDead)
             {
+                FindObjectOfType<AudioManager>().Play("Death");
+                _isDead = true;
+                _rigidbody.velocity = Vector3.zero;
+                _boxCollider.enabled = false;
                 _animator.SetTrigger("Death");
                 Destroy(this.gameObject, 1.25f);
                 Invoke(nameof(EndGame),1f);
@@ -141,6 +147,8 @@ public class Player : MonoBehaviour
 
     void EndGame()
     {
+        FindObjectOfType<AudioManager>().Stop("Theme");
+        FindObjectOfType<AudioManager>().Play("GameOver");
         GameOverMenu._gameEnds = true;
     }
 
@@ -157,7 +165,7 @@ public class Player : MonoBehaviour
                     Vector3 spellStartPosition = transform.position;
 
                     GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
-
+                    FindObjectOfType<AudioManager>().Play("FireBallAwake");
                     _lastFireTimeFire = Time.time;
                     _cooldowns[0].SetCooldown(_cooldownSpellFire);
                     _cooldowns[0].StartCounting();
@@ -171,8 +179,8 @@ public class Player : MonoBehaviour
                     manaBar.SetMana(_currentMana);
                     Vector3 spellStartPosition = transform.position;
 
-                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
-
+                    GameObject spellObject = Instantiate(_spellPrefab[1], spellStartPosition, Quaternion.identity);
+                    FindObjectOfType<AudioManager>().Play("IceBallAwake");
                     _lastFireTimeIce = Time.time;
                     _cooldowns[1].SetCooldown(_cooldownSpellIce);
                     _cooldowns[1].StartCounting();
@@ -186,8 +194,8 @@ public class Player : MonoBehaviour
                     manaBar.SetMana(_currentMana);
                     Vector3 spellStartPosition = transform.position;
 
-                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
-
+                    GameObject spellObject = Instantiate(_spellPrefab[2], spellStartPosition, Quaternion.identity);
+                    FindObjectOfType<AudioManager>().Play("ThunderBallAwake");
                     _lastFireTimeThunder = Time.time;
                     _cooldowns[2].SetCooldown(_cooldownSpellThunder);
                     _cooldowns[2].StartCounting();
@@ -248,5 +256,12 @@ public class Player : MonoBehaviour
         _currentHp -= damage;
 
         healthBar.SetHealth(_currentHp);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            FindObjectOfType<AudioManager>().Play("PlayerHit");
+        }
     }
 }

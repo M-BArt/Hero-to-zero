@@ -14,14 +14,14 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float _forcePunch = 20;
     
     
-    private Rigidbody2D _fireballRigidbody;
+    private Rigidbody2D _SpellRigidbody;
     private Collider2D _collider;
     private float delayTime = 0.5f;
     private bool _readyToCast;
 
     void Start()
     {
-        _fireballRigidbody = GetComponent<Rigidbody2D>();
+        _SpellRigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();   
         _readyToCast = false;
         StartCoroutine(StartMovementAfterDelay());
@@ -39,7 +39,7 @@ public class FireballController : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);    
         
         _readyToCast = true;
-        _fireballRigidbody.velocity = unitVector * _fireballSpeed;
+        _SpellRigidbody.velocity = unitVector * _fireballSpeed;
         Destroy(gameObject, _lifeTime);
     }
 
@@ -51,11 +51,11 @@ public class FireballController : MonoBehaviour
             Rigidbody2D enemyRb = collision.gameObject.GetComponent<Rigidbody2D>();
             if (enemyRb != null)
             {
-                enemyRb.AddForce(_fireballRigidbody.velocity / _fireballSpeed * _forcePunch, ForceMode2D.Impulse);
+                enemyRb.AddForce(_SpellRigidbody.velocity / _fireballSpeed * _forcePunch, ForceMode2D.Impulse);
                 StartCoroutine(StopEnemy(enemyRb, 0.1f));
             }
 
-            _fireballRigidbody.velocity = Vector2.zero;
+            _SpellRigidbody.velocity = Vector2.zero;
             _collider.enabled = false;
             _animator.SetTrigger("Destroy");
             Destroy(gameObject, 1f);
@@ -72,7 +72,7 @@ public class FireballController : MonoBehaviour
 
         if (_readyToCast == false)
         {
-            _fireballRigidbody.transform.position = GameObject.Find("Player").transform.position; 
+            _SpellRigidbody.transform.position = GameObject.Find("Player").transform.position; 
         }
     
     }

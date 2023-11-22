@@ -9,7 +9,7 @@ public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Transform target;
-    [SerializeField] private float _speed = 4f;
+    [SerializeField] public float _speed = 4f;
     [SerializeField] private float _nextWaypointDistance = 3f;
 
     private Vector3 _scale;
@@ -147,5 +147,4 @@ public class EnemyAI : MonoBehaviour
     {
         _gotHit=false;
     }
-
 }

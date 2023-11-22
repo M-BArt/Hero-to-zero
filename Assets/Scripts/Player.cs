@@ -174,7 +174,7 @@ public class Player : MonoBehaviour
             case 2:
                 if (Time.time - _lastFireTimeIce >= _cooldownSpellIce && _currentMana > 0)
                 {
-                    _currentMana -= manaCost;
+                    _currentMana -= manaCost * 2;
 
                     manaBar.SetMana(_currentMana);
                     Vector3 spellStartPosition = transform.position;
@@ -189,11 +189,11 @@ public class Player : MonoBehaviour
             case 3:
                 if (Time.time - _lastFireTimeThunder >= _cooldownSpellThunder && _currentMana > 0)
                 {
-                    _currentMana -= manaCost;
+                    _currentMana -= manaCost * 3;
 
                     manaBar.SetMana(_currentMana);
                     Vector3 spellStartPosition = transform.position;
-
+                    
                     GameObject spellObject = Instantiate(_spellPrefab[2], spellStartPosition, Quaternion.identity);
                     FindObjectOfType<AudioManager>().Play("ThunderBallAwake");
                     _lastFireTimeThunder = Time.time;
@@ -204,16 +204,22 @@ public class Player : MonoBehaviour
             case 4:
                 if (Time.time - _lastFireTimeHeal >= _cooldownSpellHeal && _currentMana > 0)
                 {
-                    _currentMana -= manaCost;
+                    _currentMana -= manaCost * 5;
 
                     manaBar.SetMana(_currentMana);
                     Vector3 spellStartPosition = transform.position;
+                    spellStartPosition.y = spellStartPosition.y - 0.25f;
+                    GameObject spellObject = Instantiate(_spellPrefab[3], spellStartPosition, Quaternion.identity);
 
-                    GameObject spellObject = Instantiate(_spellPrefab[0], spellStartPosition, Quaternion.identity);
-
+                if ((_currentHp + 25) >= 100)
+                    _currentHp = _healthPoints;
+                else
+                _currentHp += 25;        
+                    healthBar.SetHealth(_currentHp);
                     _lastFireTimeHeal = Time.time;
                     _cooldowns[3].SetCooldown(_cooldownSpellHeal);
                     _cooldowns[3].StartCounting();
+                    DestroyObject(spellObject, 0.5f);
                 }
                 break;
 
@@ -244,11 +250,12 @@ public class Player : MonoBehaviour
 
     void RestoreMana()
     {
-        if (_currentMana < _maxMana)
-        {
+        if ((_currentMana + 15) >= _maxMana)
+            _currentMana = _maxMana;  
+        else
             _currentMana = _currentMana + 15;
-            manaBar.SetMana(_currentMana);
-        }
+        manaBar.SetMana(_currentMana);
+        
     }
 
     void TakeDamage(int damage)

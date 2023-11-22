@@ -12,7 +12,7 @@ public class FireballController : MonoBehaviour
     [SerializeField] private float _lifeTime = 2f;
     [SerializeField] private float _cooldawnSpell = 2f;
     [SerializeField] private float _forcePunch = 20;
-    
+
     
     private Rigidbody2D _SpellRigidbody;
     private Collider2D _collider;

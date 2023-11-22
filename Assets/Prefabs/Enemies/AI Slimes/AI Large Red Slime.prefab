@@ -129,6 +129,7 @@ MonoBehaviour:
   _animator: {fileID: 4036889749150412529}
   _healthPoints: 10
   _healthBar: {fileID: 8050461130553170277}
+  _enemy: {fileID: 0}
 --- !u!50 &7310674695791534239
 Rigidbody2D:
   serializedVersion: 4

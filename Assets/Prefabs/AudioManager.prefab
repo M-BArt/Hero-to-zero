@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7300969098932114228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7868026386660973416}
+  - component: {fileID: 1437598963898153885}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7868026386660973416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7300969098932114228}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1437598963898153885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7300969098932114228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fbb4c5e40aeed458322b2bc523c120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Death
+    clip: {fileID: 8300000, guid: 35ce408210dfa9843ba14da86f8efb4e, type: 3}
+    volume: 0.802
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Theme
+    clip: {fileID: 8300000, guid: 882f38efd0b3ac648b6aad20ea575499, type: 3}
+    volume: 0.467
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: FireBallAwake
+    clip: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+    volume: 0.302
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: IceBallAwake
+    clip: {fileID: 8300000, guid: 1d74880bed4586644a16a79a2d9dc8af, type: 3}
+    volume: 0.302
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SlimeHit
+    clip: {fileID: 8300000, guid: 7c47b20bb9874304a809dc5580d403ba, type: 3}
+    volume: 0.192
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ThunderBallAwake
+    clip: {fileID: 8300000, guid: f1cb5d83282f2904a85f73111d068616, type: 3}
+    volume: 0.102
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlayerHit
+    clip: {fileID: 8300000, guid: 2c3e4f1246b2b7d48bbd7259589b5893, type: 3}
+    volume: 0.11
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SpellDestory
+    clip: {fileID: 8300000, guid: 595e756490633c04196b7017f70c0ade, type: 3}
+    volume: 0.065
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: GameOver
+    clip: {fileID: 8300000, guid: fb273957e7edc6a4fb4bc7a4449bd241, type: 3}
+    volume: 0.467
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Click
+    clip: {fileID: 8300000, guid: 35cf7766e9e2aa542811e896fde57989, type: 3}
+    volume: 0.467
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}

@@ -29,16 +29,14 @@ public class FireballController : MonoBehaviour
     }
     IEnumerator StartMovementAfterDelay()
     {
-        yield return new WaitForSeconds(delayTime);
-        
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0f;
         Vector2 direction = (mousePosition - transform.position).normalized;
         Vector2 unitVector = new Vector2(direction.x/(Mathf.Sqrt(Mathf.Pow(direction.x,2) + Mathf.Pow(direction.y, 2))), direction.y/ (Mathf.Sqrt(Mathf.Pow(direction.x, 2) + Mathf.Pow(direction.y, 2))));
-
         float angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg + 90;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);    
-        
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        yield return new WaitForSeconds(delayTime);
         _readyToCast = true;
         _SpellRigidbody.velocity = unitVector * _fireballSpeed;
         Destroy(gameObject, _lifeTime);

@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1565001400382052380}
-  _healthPoints: 100
+  _healthPoints: 5
   _healthBar: {fileID: 3377199362431877424}
 --- !u!50 &8790473233893844577
 Rigidbody2D:

@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 9219595733349799241}
-  _healthPoints: 10
+  _healthPoints: 2
   _healthBar: {fileID: 6436285736973897395}
 --- !u!50 &7844815404933188867
 Rigidbody2D:
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c9a24e2cd71ef4cb195dcf1b4f27d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knockbackVelocity: 2
+  _knockbackVelocity: 5
   _knockbackDamage: 2
 --- !u!70 &4856902557506913374
 CapsuleCollider2D:
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvas: {fileID: 2467876380698446858}
   target: {fileID: 0}
-  _speed: 4
+  _speed: 8
   _nextWaypointDistance: 3
 --- !u!114 &6314799262416162135
 MonoBehaviour:

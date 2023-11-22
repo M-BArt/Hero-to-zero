@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 586742192650467058}
-  _healthPoints: 50
+  _healthPoints: 5
   _healthBar: {fileID: 6819567597395974466}
 --- !u!50 &5119703008499692919
 Rigidbody2D:
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvas: {fileID: 2724140259010452475}
   target: {fileID: 0}
-  _speed: 4
+  _speed: 6
   _nextWaypointDistance: 3
 --- !u!58 &6508632065347727297
 CircleCollider2D:

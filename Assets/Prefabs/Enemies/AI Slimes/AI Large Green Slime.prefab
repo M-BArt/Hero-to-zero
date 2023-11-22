@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 8541798038564897386}
-  _healthPoints: 25
+  _healthPoints: 8
   _healthBar: {fileID: 2572549148639503439}
 --- !u!50 &740500541121516321
 Rigidbody2D:
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c9a24e2cd71ef4cb195dcf1b4f27d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knockbackVelocity: 8
+  _knockbackVelocity: 15
   _knockbackDamage: 4
 --- !u!114 &8336528444938455167
 MonoBehaviour:

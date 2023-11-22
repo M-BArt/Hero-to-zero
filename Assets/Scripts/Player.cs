@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
     {
         if (_currentMana < _maxMana)
         {
-            _currentMana = _currentMana + 5;
+            _currentMana = _currentMana + 15;
             manaBar.SetMana(_currentMana);
         }
     }
